@@ -3,23 +3,32 @@ package com.selfvsself.moviewatch;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private BottomSheetBehavior mbottomSheetBehavior;
-    private TextView textViewState;
-    private Button btnExpand, btnCollapse;
+    private ImageButton btnAdd, btnSearch, btnAccept, btnCancel;
+    private TextInputEditText inputSearch, inputTitle, inputGenre, inputDescription;
+    private RecyclerView recyclerView;
+    private RecyclerAdapter recyclerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,37 +37,60 @@ public class MainActivity extends AppCompatActivity {
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mbottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
-        textViewState = findViewById(R.id.text_state);
-        btnExpand = findViewById(R.id.btn_expand);
-        btnCollapse = findViewById(R.id.btn_collapse);
+        btnAdd = findViewById(R.id.btn_add);
+        btnSearch = findViewById(R.id.btn_search);
+        btnAccept = findViewById(R.id.btn_accept);
+        btnCancel = findViewById(R.id.btn_cancel);
+        recyclerView = findViewById(R.id.recycler);
+        List<Movie> movieList = new ArrayList<>();
+        movieList.add(new Movie("Терминатор", "Боевик", "Скачать"));
+        movieList.add(new Movie("Звездные войны", "Фантастика", "В кино"));
+        movieList.add(new Movie("Достать ножи", "Комедия", "Скачать"));
+        movieList.add(new Movie("Солнцестояние", "Ужасы", "Скачать"));
+        movieList.add(new Movie("Терминатор", "Боевик", "Скачать"));
+        movieList.add(new Movie("Звездные войны", "Фантастика", "В кино"));
+        movieList.add(new Movie("Достать ножи", "Комедия", "Скачать"));
+        movieList.add(new Movie("Солнцестояние", "Ужасы", "Скачать"));
+        movieList.add(new Movie("Терминатор", "Боевик", "Скачать"));
+        movieList.add(new Movie("Звездные войны", "Фантастика", "В кино"));
+        movieList.add(new Movie("Достать ножи", "Комедия", "Скачать"));
+        movieList.add(new Movie("Солнцестояние", "Ужасы", "Скачать"));
+        movieList.add(new Movie("Терминатор", "Боевик", "Скачать"));
+        movieList.add(new Movie("Звездные войны", "Фантастика", "В кино"));
+        movieList.add(new Movie("Достать ножи", "Комедия", "Скачать"));
+        movieList.add(new Movie("Солнцестояние", "Ужасы", "Скачать"));
+        recyclerAdapter = new RecyclerAdapter(this, movieList);
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.hasFixedSize();
 
-        btnExpand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        inputSearch = findViewById(R.id.input_search);
+        inputTitle = findViewById(R.id.input_title);
+        inputGenre = findViewById(R.id.input_genre);
+        inputDescription = findViewById(R.id.input_description);
+
+        btnAdd.setOnClickListener(this);
+        btnSearch.setOnClickListener(this);
+        btnAccept.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_add:
                 mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-            }
-        });
-
-        btnCollapse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case R.id.btn_search:
                 mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-            }
-        });
-
-        mbottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View view, int i) {
-                textViewState.setText(String.valueOf(i));
-            }
-
-            @Override
-            public void onSlide(@NonNull View view, float v) {
-                textViewState.setText(String.valueOf(v));
-            }
-        });
-
+                break;
+            case R.id.btn_accept:
+                mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                break;
+            case R.id.btn_cancel:
+                mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                break;
+        }
     }
 }

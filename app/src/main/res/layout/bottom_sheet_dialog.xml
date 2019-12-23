@@ -1,68 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_gravity="center"
-    android:paddingTop="8dp"
-    android:paddingHorizontal="32dp">
+    android:orientation="vertical"
+    android:paddingHorizontal="8dp">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add movie"
-        android:textColor="@color/colorMainText"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_add"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0"
+            android:background="@color/colorBackgroundLight"
+            android:src="@drawable/ic_add_24dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="8dp"
+            android:hint="Search"
+            android:textColorHint="@color/colorSecondText"
+            app:boxBackgroundColor="@color/colorBackgroundLight"
+            app:boxStrokeColor="@color/colorAccent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/colorMainText" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/btn_search"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorBackgroundLight"
+            android:src="@drawable/ic_search_24dp"
+            android:layout_weight="0"/>
+
+    </LinearLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="53dp"
         android:hint="Movie title"
-        app:boxBackgroundColor="@color/colorBackgroundLight"
-        app:boxStrokeColor="@color/colorAccent"
         android:textColorHint="@color/colorSecondText"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        app:boxBackgroundColor="@color/colorBackgroundLight"
+        app:boxStrokeColor="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorMainText"/>
+            android:singleLine="true"
+            android:textColor="@color/colorMainText" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="53dp"
         android:hint="Genre"
-        app:boxBackgroundColor="@color/colorBackgroundLight"
-        app:boxStrokeColor="@color/colorAccent"
         android:textColorHint="@color/colorSecondText"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        app:boxBackgroundColor="@color/colorBackgroundLight"
+        app:boxStrokeColor="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_genre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorMainText"/>
+            android:singleLine="true"
+            android:textColor="@color/colorMainText" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_accept"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="0"
+            android:background="@color/colorBackgroundLight"
+            android:src="@drawable/ic_done_24dp"/>
+
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
         android:hint="Description"
-        app:boxBackgroundColor="@color/colorBackgroundLight"
-        app:boxStrokeColor="@color/colorAccent"
         android:textColorHint="@color/colorSecondText"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        app:boxBackgroundColor="@color/colorBackgroundLight"
+        app:boxStrokeColor="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorMainText"/>
+            android:textColor="@color/colorMainText" />
     </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_clear_24dp"
+            android:layout_weight="0"
+            android:background="@color/colorBackgroundLight"/>
+
+    </LinearLayout>
+
 
 </LinearLayout>
