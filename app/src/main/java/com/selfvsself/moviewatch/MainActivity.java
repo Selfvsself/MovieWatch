@@ -63,11 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.hasFixedSize();
 
-        inputSearch = findViewById(R.id.input_search);
-        inputTitle = findViewById(R.id.input_title);
-        inputGenre = findViewById(R.id.input_genre);
-        inputDescription = findViewById(R.id.input_description);
-
         btnAdd.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
         btnAccept.setOnClickListener(this);

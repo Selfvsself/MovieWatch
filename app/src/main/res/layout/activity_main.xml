@@ -18,8 +18,8 @@
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBackgroundLight"
-        app:behavior_peekHeight="66dp"
+        android:background="@color/colorBackground3"
+        app:behavior_peekHeight="48dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
         <include layout="@layout/bottom_sheet_dialog" />
