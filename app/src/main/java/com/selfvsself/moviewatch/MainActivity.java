@@ -36,37 +36,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mbottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        btnAdd = findViewById(R.id.btn_add);
-        btnSearch = findViewById(R.id.btn_search);
-        btnAccept = findViewById(R.id.btn_accept);
-        btnCancel = findViewById(R.id.btn_cancel);
         recyclerView = findViewById(R.id.recycler);
+
         List<Movie> movieList = new ArrayList<>();
-        movieList.add(new Movie("Терминатор", "Боевик", "Скачать"));
-        movieList.add(new Movie("Звездные войны", "Фантастика", "В кино"));
-        movieList.add(new Movie("Достать ножи", "Комедия", "Скачать"));
-        movieList.add(new Movie("Солнцестояние", "Ужасы", "Скачать"));
-        movieList.add(new Movie("Терминатор", "Боевик", "Скачать"));
-        movieList.add(new Movie("Звездные войны", "Фантастика", "В кино"));
-        movieList.add(new Movie("Достать ножи", "Комедия", "Скачать"));
-        movieList.add(new Movie("Солнцестояние", "Ужасы", "Скачать"));
-        movieList.add(new Movie("Терминатор", "Боевик", "Скачать"));
-        movieList.add(new Movie("Звездные войны", "Фантастика", "В кино"));
-        movieList.add(new Movie("Достать ножи", "Комедия", "Скачать"));
-        movieList.add(new Movie("Солнцестояние", "Ужасы", "Скачать"));
-        movieList.add(new Movie("Терминатор", "Боевик", "Скачать"));
-        movieList.add(new Movie("Звездные войны", "Фантастика", "В кино"));
-        movieList.add(new Movie("Достать ножи", "Комедия", "Скачать"));
-        movieList.add(new Movie("Солнцестояние", "Ужасы", "Скачать"));
+        movieList.add(new Movie("Терминатор", "Боевик", "Нужно скачать"));
+        movieList.add(new Movie("Звездные войны", "Фантастика", "Идет в кино"));
+        movieList.add(new Movie("Достать ножи", "Комедия", "Нужно скачать"));
+        movieList.add(new Movie("Солнцестояние", "Ужасы", "Нужно скачать"));
+        movieList.add(new Movie("Терминатор", "Боевик", "Нужно скачать"));
+        movieList.add(new Movie("Звездные войны", "Фантастика", "Идет в кино"));
+        movieList.add(new Movie("Достать ножи", "Комедия", "Нужно скачать"));
+        movieList.add(new Movie("Солнцестояние", "Ужасы", "Нужно скачать"));
+        movieList.add(new Movie("Терминатор", "Боевик", "Нужно скачать"));
+        movieList.add(new Movie("Звездные войны", "Фантастика", "Идет в кино"));
+        movieList.add(new Movie("Достать ножи", "Комедия", "Нужно скачать"));
+        movieList.add(new Movie("Солнцестояние", "Ужасы", "Нужно скачать"));
+        movieList.add(new Movie("Терминатор", "Боевик", "Нужно скачать"));
+        movieList.add(new Movie("Звездные войны", "Фантастика", "Идет в кино"));
+        movieList.add(new Movie("Достать ножи", "Комедия", "Нужно скачать"));
+        movieList.add(new Movie("Солнцестояние", "Ужасы", "Нужно скачать"));
         recyclerAdapter = new RecyclerAdapter(this, movieList);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.hasFixedSize();
 
+        btnAdd = findViewById(R.id.btn_add);
+        btnAccept = findViewById(R.id.btn_done);
+
         btnAdd.setOnClickListener(this);
-        btnSearch.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
+
+        mbottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                if (i == BottomSheetBehavior.STATE_COLLAPSED) {
+                    btnAdd.setImageResource(R.drawable.ic_add_24dp);
+                } else if (i == BottomSheetBehavior.STATE_EXPANDED) {
+                    btnAdd.setImageResource(R.drawable.ic_clear_24dp);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
+        });
 
 
     }
@@ -75,15 +88,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add:
-                mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                if (mbottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
                 break;
-            case R.id.btn_search:
-                mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                break;
-            case R.id.btn_accept:
-                mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                break;
-            case R.id.btn_cancel:
+            case R.id.btn_done:
                 mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
         }

@@ -12,6 +12,9 @@
     <color name="colorItem2">#ffffff</color>
     <color name="colorMainText">#e1e3e6</color>
     <color name="colorSecondText">#909499</color>
-    
+    <color name="colorTest2">#076AEC</color>
+    <color name="colorTest3">#13E913</color>
+    <color name="colorTest4">#D31A4F</color>
+
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#939393</color>
 </resources>

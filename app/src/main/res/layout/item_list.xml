@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:backgroundTint="@color/colorBackground2"
-    android:layout_marginBottom="8dp">
+    android:backgroundTint="@color/colorBackground2">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +23,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="4dp">
 
             <TextView
                 android:id="@+id/item_genre"
@@ -44,6 +44,11 @@
                 android:textColor="@color/colorSecondText"
                 android:textSize="16sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/separator"/>
 
     </LinearLayout>
 
