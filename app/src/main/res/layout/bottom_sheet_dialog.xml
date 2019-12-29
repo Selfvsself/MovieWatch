@@ -27,6 +27,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/inputSearch"
                 android:textSize="16dp"
                 android:layout_marginLeft="8dp"
                 android:singleLine="true"
@@ -67,6 +68,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/inputTitle"
                 android:textSize="16dp"
                 android:layout_marginLeft="8dp"
                 android:singleLine="true"
@@ -105,6 +107,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/inputGenre"
                 android:textSize="16dp"
                 android:layout_marginLeft="8dp"
                 android:singleLine="true"
@@ -144,6 +147,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/inputDescription"
                 android:textSize="16dp"
                 android:layout_marginLeft="8dp"
                 android:textColor="@color/colorMainText"
