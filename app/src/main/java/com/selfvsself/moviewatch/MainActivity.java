@@ -24,8 +24,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.selfvsself.moviewatch.DbHelper.DbHelper;
 import com.selfvsself.moviewatch.Helper.RecyclerItemTouchHelper;
 import com.selfvsself.moviewatch.Helper.RecyclerItemTouchHelperListener;
+import com.selfvsself.moviewatch.Repository.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +40,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     private CoordinatorLayout rootLayout;
-    List<Movie> movieList = new ArrayList<>();
+    private List<Movie> movieList;
+    private Repository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        repository = new Repository(this);
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mbottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -53,22 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         inputGenre = findViewById(R.id.inputGenre);
         inputDescription = findViewById(R.id.inputDescription);
 
-        movieList.add(new Movie("Терминатор", "Боевик", "Нужно скачать"));
-        movieList.add(new Movie("Звездные войны", "Фантастика", "Идет в кино"));
-        movieList.add(new Movie("Достать ножи", "Комедия", "Нужно скачать"));
-        movieList.add(new Movie("Солнцестояние", "Ужасы", "Нужно скачать"));
-        movieList.add(new Movie("Терминатор", "Боевик", "Нужно скачать"));
-        movieList.add(new Movie("Звездные войны", "Фантастика", "Идет в кино"));
-        movieList.add(new Movie("Достать ножи", "Комедия", "Нужно скачать"));
-        movieList.add(new Movie("Солнцестояние", "Ужасы", "Нужно скачать"));
-        movieList.add(new Movie("Терминатор", "Боевик", "Нужно скачать"));
-        movieList.add(new Movie("Звездные войны", "Фантастика", "Идет в кино"));
-        movieList.add(new Movie("Достать ножи", "Комедия", "Нужно скачать"));
-        movieList.add(new Movie("Солнцестояние", "Ужасы", "Нужно скачать"));
-        movieList.add(new Movie("Терминатор", "Боевик", "Нужно скачать"));
-        movieList.add(new Movie("Звездные войны", "Фантастика", "Идет в кино"));
-        movieList.add(new Movie("Достать ножи", "Комедия", "Нужно скачать"));
-        movieList.add(new Movie("Солнцестояние", "Ужасы", "Нужно скачать"));
+        movieList = repository.readAll();
+
         recyclerAdapter = new RecyclerAdapter(this, movieList);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(recyclerAdapter);
@@ -144,26 +135,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_add:
                 if (mbottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                     mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    inputTitle.requestFocus();
                 } else {
                     inputTitle.setText("");
                     inputGenre.setText("");
                     inputDescription.setText("");
+                    inputSearch.requestFocus();
                     mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
                 break;
             case R.id.btn_done:
-                Movie addMovie = new Movie();
-                addMovie.setTitle(inputTitle.getText().toString());
-                addMovie.setGenre(inputGenre.getText().toString());
-                addMovie.setDescription(inputDescription.getText().toString());
-                movieList.add(addMovie);
-                recyclerAdapter.notifyItemInserted(movieList.size() - 1);
+                String nameNewMovie;
+                if (inputTitle.getText() != null) {
+                    nameNewMovie = inputTitle.getText().toString();
+                } else {
+                    nameNewMovie = "";
+                }
+                if (nameNewMovie.length() > 0 && !checkMatches(nameNewMovie)) {
+                    Movie addMovie = new Movie();
+                    addMovie.setTitle(inputTitle.getText().toString());
+                    addMovie.setGenre(inputGenre.getText().toString());
+                    addMovie.setDescription(inputDescription.getText().toString());
+                    movieList.add(addMovie);
+                    repository.addMovie(addMovie);
+                    recyclerAdapter.notifyItemInserted(movieList.size() - 1);
+                } else {
+                    Snackbar snackbar = Snackbar.make(rootLayout, "\n" +
+                            "incorrect movie title", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                }
                 inputTitle.setText("");
                 inputGenre.setText("");
                 inputDescription.setText("");
+                inputSearch.requestFocus();
                 mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
         }
+    }
+
+    private boolean checkMatches(String nameNewMovie) {
+        boolean isMatches = false;
+        for (Movie movie : movieList) {
+            if (movie.getTitle().equalsIgnoreCase(nameNewMovie)) {
+                isMatches = true;
+            }
+        }
+        return isMatches;
     }
 
     @Override
@@ -174,12 +191,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             final Movie deletedMovie = movieList.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
 
+            repository.deleteMovie(deletedMovie);
             recyclerAdapter.removeItem(deletedIndex);
 
             Snackbar snackbar = Snackbar.make(rootLayout, name + " removed", Snackbar.LENGTH_SHORT);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    repository.addMovie(deletedMovie);
                     recyclerAdapter.restoreItem(deletedIndex, deletedMovie);
                 }
             });
