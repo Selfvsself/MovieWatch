@@ -113,15 +113,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mbottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
-                if (i == BottomSheetBehavior.STATE_COLLAPSED) {
-                    btnAdd.setImageResource(R.drawable.ic_add_24dp);
-                } else if (i == BottomSheetBehavior.STATE_EXPANDED) {
-                    btnAdd.setImageResource(R.drawable.ic_clear_24dp);
-                }
+
             }
 
             @Override
             public void onSlide(@NonNull View view, float v) {
+                btnAdd.setRotation(v * 45);
 
             }
         });
