@@ -1,33 +1,26 @@
-package com.selfvsself.moviewatch;
+package com.selfvsself.moviewatch.View;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.selfvsself.moviewatch.DbHelper.DbHelper;
-import com.selfvsself.moviewatch.Helper.RecyclerItemTouchHelper;
-import com.selfvsself.moviewatch.Helper.RecyclerItemTouchHelperListener;
-import com.selfvsself.moviewatch.Repository.Repository;
+import com.selfvsself.moviewatch.Model.Helper.*;
+import com.selfvsself.moviewatch.Model.Movie;
+import com.selfvsself.moviewatch.Model.RecyclerAdapter;
+import com.selfvsself.moviewatch.Presenter.*;
+import com.selfvsself.moviewatch.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,32 +28,33 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, RecyclerItemTouchHelperListener {
 
     private BottomSheetBehavior mbottomSheetBehavior;
-    private ImageButton btnAdd, btnAccept;
+    private ImageButton btnAdd;
     private TextInputEditText inputSearch, inputTitle, inputGenre, inputDescription;
-    private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     private CoordinatorLayout rootLayout;
     private List<Movie> movieList;
-    private Repository repository;
+    private List<Movie> filteredMovieList;
+    private MainPresenterInterface presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        repository = new Repository(this);
+        presenter = new MainPresenter(this);
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mbottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        recyclerView = findViewById(R.id.recycler);
+        RecyclerView recyclerView = findViewById(R.id.recycler);
         inputSearch = findViewById(R.id.inputSearch);
         inputTitle = findViewById(R.id.inputTitle);
         inputGenre = findViewById(R.id.inputGenre);
         inputDescription = findViewById(R.id.inputDescription);
 
-        movieList = repository.readAll();
+        movieList = presenter.getMovieListOnBase();
+        filteredMovieList = new ArrayList<>(movieList);
 
-        recyclerAdapter = new RecyclerAdapter(this, movieList);
+        recyclerAdapter = new RecyclerAdapter(this, filteredMovieList);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(recyclerAdapter);
         rootLayout = findViewById(R.id.root_layout);
@@ -71,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new ItemTouchHelper(itemTouchHelperCallbackLeft).attachToRecyclerView(recyclerView);
 
         btnAdd = findViewById(R.id.btn_add);
-        btnAccept = findViewById(R.id.btn_done);
+        ImageButton btnAccept = findViewById(R.id.btn_done);
 
         btnAdd.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
@@ -89,23 +83,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void afterTextChanged(Editable s) {
-                List<Movie> filteredList = new ArrayList<>();
+                filteredMovieList = new ArrayList<>(movieList);
                 if (inputSearch.getText() != null) {
                     String searchFilter = inputSearch.getText().toString().toLowerCase();
-                    if (searchFilter.equals("")) {
-                        recyclerAdapter.setList(movieList);
-                        recyclerAdapter.notifyDataSetChanged();
-                        return;
-                    }
-                    for (Movie movie : movieList) {
-                        if (movie.getTitle().toLowerCase().contains(searchFilter) ||
-                                movie.getGenre().toLowerCase().contains(searchFilter) ||
-                                movie.getDescription().toLowerCase().contains(searchFilter)) {
-                            filteredList.add(movie);
-                        }
-                    }
-                    recyclerAdapter.setList(filteredList);
-                    recyclerAdapter.notifyDataSetChanged();
+                    filterMainMovieList(searchFilter);
                 }
             }
         });
@@ -113,17 +94,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mbottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
-
             }
 
             @Override
             public void onSlide(@NonNull View view, float v) {
                 btnAdd.setRotation(v * 45);
-
             }
         });
+    }
 
-
+    private void filterMainMovieList(String searchString) {
+        filteredMovieList.clear();
+        recyclerAdapter.notifyDataSetChanged();
+        for (int i = 0; i < movieList.size(); i++) {
+            if (movieList.get(i).getTitle().toLowerCase().contains(searchString) ||
+                    movieList.get(i).getGenre().toLowerCase().contains(searchString) ||
+                    movieList.get(i).getDescription().toLowerCase().contains(searchString)) {
+                filteredMovieList.add(movieList.get(i));
+                recyclerAdapter.notifyItemInserted(filteredMovieList.size() - 1);
+            }
+        }
     }
 
     @Override
@@ -154,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     addMovie.setGenre(inputGenre.getText().toString());
                     addMovie.setDescription(inputDescription.getText().toString());
                     movieList.add(addMovie);
-                    repository.addMovie(addMovie);
+                    presenter.addMovie(addMovie);
                     recyclerAdapter.notifyItemInserted(movieList.size() - 1);
                 } else {
                     Snackbar snackbar = Snackbar.make(rootLayout, "\n" +
@@ -188,15 +178,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             final Movie deletedMovie = movieList.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
 
-            repository.deleteMovie(deletedMovie);
+            presenter.deleteMovie(deletedMovie);
             recyclerAdapter.removeItem(deletedIndex);
 
             Snackbar snackbar = Snackbar.make(rootLayout, name + " removed", Snackbar.LENGTH_SHORT);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    repository.addMovie(deletedMovie);
-                    recyclerAdapter.restoreItem(deletedIndex, deletedMovie);
+                    presenter.addMovie(deletedMovie);
+                    recyclerAdapter.restoreItem(deletedMovie);
                 }
             });
             snackbar.show();

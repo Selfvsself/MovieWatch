@@ -1,4 +1,4 @@
-package com.selfvsself.moviewatch;
+package com.selfvsself.moviewatch.Model;
 
 public class Movie {
 

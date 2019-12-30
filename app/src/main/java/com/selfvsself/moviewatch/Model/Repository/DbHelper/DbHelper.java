@@ -1,4 +1,4 @@
-package com.selfvsself.moviewatch.DbHelper;
+package com.selfvsself.moviewatch.Model.Repository.DbHelper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

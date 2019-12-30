@@ -1,4 +1,4 @@
-package com.selfvsself.moviewatch.Helper;
+package com.selfvsself.moviewatch.Model.Helper;
 
 import android.graphics.Canvas;
 import android.view.View;
@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.selfvsself.moviewatch.RecyclerAdapter;
+import com.selfvsself.moviewatch.Model.RecyclerAdapter;
 
 public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 

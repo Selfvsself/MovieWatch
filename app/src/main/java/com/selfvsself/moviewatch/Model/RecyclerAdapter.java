@@ -1,4 +1,4 @@
-package com.selfvsself.moviewatch;
+package com.selfvsself.moviewatch.Model;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.selfvsself.moviewatch.R;
 
 import java.util.List;
 
@@ -47,9 +49,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         notifyItemRemoved(position);
     }
 
-    public void restoreItem(int position, Movie movie) {
-        movieList.add(position, movie);
-        notifyItemInserted(position);
+    public void restoreItem(Movie movie) {
+        movieList.add(movie);
+        notifyItemInserted(movieList.size() - 1);
     }
 
     public void setList(List<Movie> list) {

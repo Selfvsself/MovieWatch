@@ -1,12 +1,12 @@
-package com.selfvsself.moviewatch.Repository;
+package com.selfvsself.moviewatch.Model.Repository;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.selfvsself.moviewatch.DbHelper.DbHelper;
-import com.selfvsself.moviewatch.Movie;
+import com.selfvsself.moviewatch.Model.Repository.DbHelper.DbHelper;
+import com.selfvsself.moviewatch.Model.Movie;
 
 import java.util.ArrayList;
 import java.util.List;

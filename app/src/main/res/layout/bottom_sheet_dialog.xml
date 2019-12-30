@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/inputSearch"
                 android:textSize="16dp"
-                android:layout_marginLeft="8dp"
+                android:paddingHorizontal="12dp"
                 android:singleLine="true"
                 android:textColor="@color/colorMainText"
                 android:theme="@style/MyEditText"/>
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/inputTitle"
                 android:textSize="16dp"
-                android:layout_marginLeft="8dp"
+                android:paddingHorizontal="12dp"
                 android:singleLine="true"
                 android:textColor="@color/colorMainText"
                 android:theme="@style/MyEditText"/>
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/inputGenre"
                 android:textSize="16dp"
-                android:layout_marginLeft="8dp"
+                android:paddingHorizontal="12dp"
                 android:singleLine="true"
                 android:textColor="@color/colorMainText"
                 android:theme="@style/MyEditText"/>
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/inputDescription"
                 android:textSize="16dp"
-                android:layout_marginLeft="8dp"
+                android:paddingHorizontal="12dp"
                 android:textColor="@color/colorMainText"
                 android:theme="@style/MyEditText"/>
 
