@@ -44,16 +44,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         return movieList.size();
     }
 
-    public void removeItem(int position) {
-        movieList.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    public void restoreItem(Movie movie) {
-        movieList.add(movie);
-        notifyItemInserted(movieList.size() - 1);
-    }
-
     public void setList(List<Movie> list) {
         movieList = list;
     }

@@ -16,25 +16,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.selfvsself.moviewatch.Model.Helper.*;
+import com.google.android.material.textfield.TextInputLayout;
+import com.selfvsself.moviewatch.Model.Helper.RecyclerItemTouchHelper;
+import com.selfvsself.moviewatch.Model.Helper.RecyclerItemTouchHelperListener;
 import com.selfvsself.moviewatch.Model.Movie;
 import com.selfvsself.moviewatch.Model.RecyclerAdapter;
-import com.selfvsself.moviewatch.Presenter.*;
+import com.selfvsself.moviewatch.Presenter.MainPresenter;
+import com.selfvsself.moviewatch.Presenter.MainPresenterInterface;
 import com.selfvsself.moviewatch.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, RecyclerItemTouchHelperListener {
 
     private BottomSheetBehavior mbottomSheetBehavior;
     private ImageButton btnAdd;
-    private TextInputEditText inputSearch, inputTitle, inputGenre, inputDescription;
-    private RecyclerAdapter recyclerAdapter;
+    private TextInputEditText inputSearch, inputGenre, inputDescription;
+    private TextInputLayout searchInputLayout;
     private CoordinatorLayout rootLayout;
-    private List<Movie> movieList;
-    private List<Movie> filteredMovieList;
     private MainPresenterInterface presenter;
+
+    private final String searchInputHint = "Search";
+    private final String searchInputHint2 = "Title";
+    private final float deltaChangeSearchHint = 1.0f / searchInputHint.length();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +49,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mbottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         RecyclerView recyclerView = findViewById(R.id.recycler);
         inputSearch = findViewById(R.id.inputSearch);
-        inputTitle = findViewById(R.id.inputTitle);
         inputGenre = findViewById(R.id.inputGenre);
         inputDescription = findViewById(R.id.inputDescription);
+        searchInputLayout = findViewById(R.id.searchInputLayout);
+        searchInputLayout.setHint(searchInputHint);
 
-        movieList = presenter.getMovieListOnBase();
-        filteredMovieList = new ArrayList<>(movieList);
-
-        recyclerAdapter = new RecyclerAdapter(this, filteredMovieList);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setAdapter(presenter.getAdapter());
         rootLayout = findViewById(R.id.root_layout);
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallbackRight = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
@@ -83,10 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void afterTextChanged(Editable s) {
-                filteredMovieList = new ArrayList<>(movieList);
-                if (inputSearch.getText() != null) {
-                    String searchFilter = inputSearch.getText().toString().toLowerCase();
-                    filterMainMovieList(searchFilter);
+                if (mbottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED && inputSearch.getText() != null) {
+                    presenter.moviesFilter(inputSearch.getText().toString());
                 }
             }
         });
@@ -99,21 +96,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSlide(@NonNull View view, float v) {
                 btnAdd.setRotation(v * 45);
+
+                int i = (int) (v / deltaChangeSearchHint);
+                int n = i;
+                if (n > searchInputHint2.length()) {
+                    n = searchInputHint2.length();
+                }
+                searchInputLayout.setHint(searchInputHint.substring(0, searchInputHint.length() - i) + searchInputHint2.substring(0, n));
             }
         });
-    }
-
-    private void filterMainMovieList(String searchString) {
-        filteredMovieList.clear();
-        recyclerAdapter.notifyDataSetChanged();
-        for (int i = 0; i < movieList.size(); i++) {
-            if (movieList.get(i).getTitle().toLowerCase().contains(searchString) ||
-                    movieList.get(i).getGenre().toLowerCase().contains(searchString) ||
-                    movieList.get(i).getDescription().toLowerCase().contains(searchString)) {
-                filteredMovieList.add(movieList.get(i));
-                recyclerAdapter.notifyItemInserted(filteredMovieList.size() - 1);
-            }
-        }
     }
 
     @Override
@@ -121,72 +112,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_add:
                 if (mbottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                    inputTitle.requestFocus();
-                } else {
-                    inputTitle.setText("");
+                    inputSearch.setText("");
                     inputGenre.setText("");
                     inputDescription.setText("");
-                    inputSearch.requestFocus();
+                    mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    inputSearch.setText("");
+                    inputGenre.setText("");
+                    inputDescription.setText("");
                     mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
                 break;
             case R.id.btn_done:
-                String nameNewMovie;
-                if (inputTitle.getText() != null) {
-                    nameNewMovie = inputTitle.getText().toString();
-                } else {
-                    nameNewMovie = "";
+                if (mbottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    if (inputSearch.getText() != null) {
+                        Movie addMovie = new Movie();
+                        addMovie.setTitle(inputSearch.getText().toString());
+                        addMovie.setGenre(inputGenre.getText().toString());
+                        addMovie.setDescription(inputDescription.getText().toString());
+
+                        String resultAdding = presenter.addMovie(addMovie);
+
+                        if (resultAdding != null) {
+                            Snackbar snackbar = Snackbar.make(rootLayout, "Incorrect movie title", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                        }
+                    }
                 }
-                if (nameNewMovie.length() > 0 && !checkMatches(nameNewMovie)) {
-                    Movie addMovie = new Movie();
-                    addMovie.setTitle(inputTitle.getText().toString());
-                    addMovie.setGenre(inputGenre.getText().toString());
-                    addMovie.setDescription(inputDescription.getText().toString());
-                    movieList.add(addMovie);
-                    presenter.addMovie(addMovie);
-                    recyclerAdapter.notifyItemInserted(movieList.size() - 1);
-                } else {
-                    Snackbar snackbar = Snackbar.make(rootLayout, "\n" +
-                            "incorrect movie title", Snackbar.LENGTH_SHORT);
-                    snackbar.show();
-                }
-                inputTitle.setText("");
+                inputSearch.setText("");
                 inputGenre.setText("");
                 inputDescription.setText("");
-                inputSearch.requestFocus();
                 mbottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
         }
     }
 
-    private boolean checkMatches(String nameNewMovie) {
-        boolean isMatches = false;
-        for (Movie movie : movieList) {
-            if (movie.getTitle().equalsIgnoreCase(nameNewMovie)) {
-                isMatches = true;
-            }
-        }
-        return isMatches;
-    }
-
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof RecyclerAdapter.MyViewHolder) {
-            String name = movieList.get(viewHolder.getAdapterPosition()).getTitle();
-
-            final Movie deletedMovie = movieList.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
 
-            presenter.deleteMovie(deletedMovie);
-            recyclerAdapter.removeItem(deletedIndex);
+            final Movie deletedMovie = presenter.deleteMovie(deletedIndex);
 
-            Snackbar snackbar = Snackbar.make(rootLayout, name + " removed", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(rootLayout, deletedMovie.getTitle() + " removed", Snackbar.LENGTH_SHORT);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     presenter.addMovie(deletedMovie);
-                    recyclerAdapter.restoreItem(deletedMovie);
                 }
             });
             snackbar.show();

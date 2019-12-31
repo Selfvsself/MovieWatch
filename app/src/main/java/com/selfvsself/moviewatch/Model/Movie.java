@@ -38,4 +38,10 @@ public class Movie {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public boolean isFiltered(String string) {
+        return (title.toLowerCase().contains(string) ||
+                genre.toLowerCase().contains(string) ||
+                description.toLowerCase().contains(string));
+    }
 }

@@ -15,10 +15,10 @@
         android:paddingHorizontal="8dp">
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Search"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:textColorHint="@color/colorSecondText"
             app:hintTextAppearance="@style/MyHintText"
@@ -45,45 +45,6 @@
             android:background="@drawable/ripple_button"
             android:layout_weight="0"
             android:src="@drawable/ic_add_24dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp"
-        android:paddingHorizontal="8dp">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Title"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:textColorHint="@color/colorSecondText"
-            app:hintTextAppearance="@style/MyHintText"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/inputTitle"
-                android:textSize="16dp"
-                android:paddingHorizontal="12dp"
-                android:singleLine="true"
-                android:textColor="@color/colorMainText"
-                android:theme="@style/MyEditText"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <View
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="3dp"
-            android:layout_weight="0"
-            android:src="@drawable/ic_search_24dp" />
 
     </LinearLayout>
 
